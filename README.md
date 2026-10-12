@@ -56,7 +56,9 @@ cd <저장소 이름>
 | `Procfile` | Cloud Run이 앱을 시작할 때 쓰는 명령 |
 | `AGENTS.md`, `CLAUDE.md` | 코딩 에이전트와 사람이 지키는 작업 규칙 |
 | `.claude/settings.json` | 코딩 에이전트(Claude Code)가 실행하지 못하는 명령과 매번 묻는 명령 |
-| `docs/` | 배포 기록 양식, Supabase 연결 절차 |
+| `docs/` | 배포 기록 양식, Supabase 연결 절차, GitHub Actions 배포 권한 절차(`wif-setup.md`) |
+| `starter/` | 실습 단계마다 꺼내 쓰는 워크플로, Dockerfile 예시, 일부러 넣어 보는 변경(`starter/README.md`) |
+| `data/samples/` | 사진 글자 읽기 실습용 일정표 사진 |
 | `JOURNEY.md` | 작업 일지 양식 |
 
 ## 환경변수
@@ -74,6 +76,7 @@ cd <저장소 이름>
 | `SUPABASE_PUBLISHABLE_KEY` | `sb_publishable_...` | 브라우저에 공개해도 되는 키. 로그인에만 쓴다 |
 | `SUPABASE_SECRET_KEY` | `sb_secret_...` | `STORAGE=supabase` 일 때 필수. RLS를 건너뛰는 키라서 Secret Manager에 둔다 |
 | `GOOGLE_LOGIN` | `true`, `false` | 구글 계정 연결 버튼 표시 |
+| `OCR_ENABLED` | `true`, `false` | 사진 글자 읽기(📷 버튼). 운영체제에 tesseract 프로그램과 한국어 데이터가 있어야 한다 |
 | `COMMIT_SHA` | 커밋 해시 | `/version` 에 표시된다. 자동 배포에서 넣는다 |
 
 `STORAGE=supabase` 는 `AUTH=supabase` 와 함께 써야 합니다. 로그인 없이 DB에 저장하면 모든 사용자의 데이터가 한 사람 것으로 섞이므로, 앱이 시작하지 않습니다.
@@ -148,6 +151,7 @@ gcloud run deploy friend-agent --source . --region us-central1 --allow-unauthent
 | --- | --- | --- |
 | 재배포해도 남는 저장, 사용자별 데이터 | `STORAGE=supabase`, `AUTH=supabase` | Supabase 프로젝트, 익명 로그인 켜기. 절차는 `docs/supabase.md` |
 | 구글 계정 연결 | `GOOGLE_LOGIN=true` | Supabase 구글 로그인 설정, 수동 연결(manual linking) 켜기 |
+| 사진 글자 읽기 | `OCR_ENABLED=true` | tesseract 프로그램. 노트북: `brew install tesseract tesseract-lang`(macOS). 서버: Dockerfile에 설치(`starter/Dockerfile`) |
 | 앱을 닫아 둬도 오는 약속 알림 | 아직 없음 | Cloud Scheduler, 웹 푸시, PWA |
 
 ## 외부 API

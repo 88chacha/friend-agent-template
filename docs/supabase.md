@@ -19,6 +19,8 @@
 | `SUPABASE_PUBLISHABLE_KEY` | 일반 환경변수(브라우저에 공개되는 키) |
 | `SUPABASE_SECRET_KEY` | Secret Manager. 서비스에는 비밀값 이름으로 연결 |
 
+secret key 를 Secret Manager에 넣었다면 실행용 서비스 계정(`friend-agent-runtime`)에 그 비밀값 하나에 대한 읽기 권한(`roles/secretmanager.secretAccessor`)을 준다. staging과 production의 secret key 는 서로 다른 비밀값으로 둔다(예: `supabase-secret-staging`, `supabase-secret-production`).
+
 노트북에서는 `.env` 에 같은 이름으로 넣는다. 노트북은 staging 프로젝트에 연결한다.
 
 ## 3. 확인
