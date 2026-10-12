@@ -51,12 +51,13 @@ cd <저장소 이름>
 | `supabase/migrations/` | Supabase 테이블 생성 SQL |
 | `data/eval/` | 평가 데이터: 도구 선택 41개, 기억 정리 15개, 안전 15개 |
 | `scripts/eval_tools.py` | 도구 선택 평가 |
+| `scripts/watch_requests.py` | 배포 중 끊김 측정. `/version` 에 0.2초마다 요청하고 리비전별 응답 수와 실패 수를 요약(최대 5분, AI 호출 없음) |
 | `tests/` | 가짜 응답으로 돌리는 테스트 |
 | `hello/` | 배포 연습용 최소 앱(AI를 부르지 않음) |
 | `Procfile` | Cloud Run이 앱을 시작할 때 쓰는 명령 |
 | `AGENTS.md`, `CLAUDE.md` | 코딩 에이전트와 사람이 지키는 작업 규칙 |
 | `.claude/settings.json` | 코딩 에이전트(Claude Code)가 실행하지 못하는 명령과 매번 묻는 명령 |
-| `docs/` | 배포 기록 양식, Supabase 연결 절차, GitHub Actions 배포 권한 절차(`wif-setup.md`) |
+| `docs/` | 배포 기록 양식, Supabase 연결 절차, GitHub Actions 배포 권한 절차(`wif-setup.md`), 운영 절차(`runbook.md`)와 카나리 판단 기준(`canary-criteria.md`) 양식 |
 | `starter/` | 실습 단계마다 꺼내 쓰는 워크플로, Dockerfile 예시, 일부러 넣어 보는 변경(`starter/README.md`) |
 | `data/samples/` | 사진 글자 읽기 실습용 일정표 사진 |
 | `JOURNEY.md` | 작업 일지 양식 |
@@ -78,6 +79,8 @@ cd <저장소 이름>
 | `GOOGLE_LOGIN` | `true`, `false` | 구글 계정 연결 버튼 표시 |
 | `OCR_ENABLED` | `true`, `false` | 사진 글자 읽기(📷 버튼). 운영체제에 tesseract 프로그램과 한국어 데이터가 있어야 한다 |
 | `COMMIT_SHA` | 커밋 해시 | `/version` 에 표시된다. 자동 배포에서 넣는다 |
+| `BANNER` | 짧은 문구 | 화면 위에 띠로 보이고 `/version` 에도 나온다. 이미지를 새로 만들지 않고 새 리비전을 만들어 볼 때 쓴다 |
+| `SLOW_START_SECONDS` | 초 | 배포 실습용 시작 지연. 포트는 바로 열지만 이 시간 동안 모든 요청(`/health` 포함)에 503을 돌려준다. 기본값 0 |
 
 `STORAGE=supabase` 는 `AUTH=supabase` 와 함께 써야 합니다. 로그인 없이 DB에 저장하면 모든 사용자의 데이터가 한 사람 것으로 섞이므로, 앱이 시작하지 않습니다.
 

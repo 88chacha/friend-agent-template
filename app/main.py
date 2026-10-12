@@ -9,10 +9,13 @@
 - /api/ocr: 사진 속 글자 읽기(OCR_ENABLED=true 일 때)
 - /api/memories, /api/reminders, /api/data: 기억, 약속, 내 데이터 관리
 """
+import html
 import json
+import os
+import time
 
 from fastapi import Depends, FastAPI, HTTPException, UploadFile
-from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel
 
 from app import agent, ocr, when
@@ -30,6 +33,20 @@ store = make_store(settings)
 current_user = Auth(settings)
 
 app = FastAPI(title="AI 친구 에이전트")
+
+# 시작 지연 스위치(배포 실습용). 포트는 바로 열지만 정한 시간 동안은 준비 중이라 모든 요청에 503을 돌려준다.
+# AI 서비스가 시작할 때 모델 설정이나 색인을 불러오느라 늦게 준비되는 상황을 흉내 낸다. 기본값 0(끔).
+SLOW_START_SECONDS = float(os.environ.get("SLOW_START_SECONDS", "0") or 0)
+READY_AT = time.time() + SLOW_START_SECONDS
+if SLOW_START_SECONDS:
+    log("WARNING", f"시작 지연 스위치가 켜져 있습니다. {SLOW_START_SECONDS:.0f}초 동안 준비 중으로 응답합니다.")
+
+
+@app.middleware("http")
+async def not_ready_yet(request, call_next):
+    if time.time() < READY_AT:
+        return JSONResponse({"status": "starting"}, status_code=503)
+    return await call_next(request)
 
 
 def get_llm():
@@ -53,9 +70,11 @@ class ReportRequest(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    html = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
+    page = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
     banner = "" if settings.env in ("production", "local") else f'<div class="banner">테스트 환경 ({settings.env})</div>'
-    return html.replace("<!--ENV_BANNER-->", banner)
+    if os.environ.get("BANNER"):  # 이미지를 새로 만들지 않고 환경변수만 바꿔 새 리비전을 만들 때 쓰는 화면 문구
+        banner += f'<div class="banner">{html.escape(os.environ["BANNER"][:80])}</div>'
+    return page.replace("<!--ENV_BANNER-->", banner)
 
 
 @app.get("/health")
@@ -66,7 +85,8 @@ def health():
 @app.get("/version")
 def version():
     return {"commit": settings.commit, "revision": settings.revision, "env": settings.env,
-            "llm": settings.provider, "model": settings.model, "storage": settings.storage, "auth": settings.auth}
+            "llm": settings.provider, "model": settings.model, "storage": settings.storage, "auth": settings.auth,
+            "banner": os.environ.get("BANNER", "")}
 
 
 @app.get("/api/config")
