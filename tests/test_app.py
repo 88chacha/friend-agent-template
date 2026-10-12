@@ -43,3 +43,8 @@ def test_due_reminder_is_delivered_only_once():
     second = store.claim_due_reminders("local-user", now)
     assert [r["text"] for r in first].count("테스트 약속") == 1
     assert "테스트 약속" not in [r["text"] for r in second]
+
+
+def test_ocr_is_off_by_default():
+    r = client.post("/api/ocr", files={"photo": ("a.png", b"x", "image/png")})
+    assert r.status_code == 404

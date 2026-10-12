@@ -6,15 +6,16 @@
 - /api/character, /api/settings: 캐릭터와 사용자 설정
 - /api/chat: 메시지 한 턴. 결과를 이벤트(JSON 한 줄씩)로 스트리밍한다
 - /api/greeting: 앱을 열 때 먼저 말 걸기
+- /api/ocr: 사진 속 글자 읽기(OCR_ENABLED=true 일 때)
 - /api/memories, /api/reminders, /api/data: 기억, 약속, 내 데이터 관리
 """
 import json
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse, StreamingResponse
 from pydantic import BaseModel
 
-from app import agent, when
+from app import agent, ocr, when
 from app.auth import Auth, User
 from app.config import ROOT, load_settings
 from app.llm import make_llm
@@ -75,6 +76,7 @@ def config():
             "supabase_url": settings.supabase_url if settings.auth == "supabase" else "",
             "supabase_publishable_key": settings.supabase_publishable_key if settings.auth == "supabase" else "",
             "google_login": settings.google_login, "show_turn_panel": settings.show_turn_panel,
+            "ocr_enabled": settings.ocr_enabled,
             "options": OPTIONS, "cities": list(CITIES)}
 
 
@@ -151,6 +153,16 @@ def chat(req: ChatRequest, user: User = Depends(current_user), model=Depends(get
 @app.post("/api/greeting")
 def greeting(user: User = Depends(current_user), model=Depends(get_llm)):
     return {"greeting": agent.greet(user.id, model, store)}
+
+
+@app.post("/api/ocr")
+async def read_photo(photo: UploadFile, user: User = Depends(current_user)):
+    if not settings.ocr_enabled:
+        raise HTTPException(404, "사진 글자 읽기가 꺼져 있습니다")
+    try:
+        return {"text": ocr.read_text(await photo.read())}
+    except ocr.OcrError as error:
+        raise HTTPException(500, str(error)) from error
 
 
 @app.post("/api/report")

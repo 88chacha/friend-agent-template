@@ -16,3 +16,5 @@ scripts/
 supabase/
 data/eval/
 requirements-dev.txt
+data/samples/
+starter/

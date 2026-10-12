@@ -36,6 +36,7 @@ class Settings:
     supabase_secret_key: str
     google_login: bool
     show_turn_panel: bool
+    ocr_enabled: bool
 
 
 def load_dotenv(path):
@@ -108,6 +109,7 @@ def load_settings():
         google_login=env_flag("GOOGLE_LOGIN", False),
         # 개발용 "이번 턴" 패널. production 에서는 기본으로 끈다.
         show_turn_panel=env_flag("SHOW_TURN_PANEL", env != "production"),
+        ocr_enabled=env_flag("OCR_ENABLED", False),  # 사진 글자 읽기. tesseract 프로그램이 필요하다
     )
     log("INFO", "앱을 시작합니다.", provider=settings.provider, model=settings.model, env=settings.env,
         storage=settings.storage, auth=settings.auth, turn_panel=settings.show_turn_panel)
