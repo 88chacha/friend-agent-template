@@ -434,7 +434,7 @@ async function send(text) {
   bubble.innerHTML = `<span class="cursor"></span>`;
   const panel = cfg.show_turn_panel ? startPanel() : null;
   const t0 = performance.now(); let tTurn = null, tFirst = null, tReply = null;
-  let reply = "", busyNote = null;
+  let reply = "", busyNote = null, finished = false;
   try {
     const r = await api("/api/chat", {method: "POST", body: JSON.stringify({message: text}), raw: true});
     if (!r.ok) throw new Error(await r.text());
@@ -466,9 +466,15 @@ async function send(text) {
           panel?.memory(e);
           refreshCount();
         }
-        else if (e.type === "done") { bubble.textContent = reply || bubble.textContent; bindReport(row, e.message_id); }
-        else if (e.type === "error") { bubble.textContent = e.message; }
+        else if (e.type === "done") { finished = true; bubble.textContent = reply || bubble.textContent; bindReport(row, e.message_id); }
+        else if (e.type === "error") { finished = true; bubble.textContent = e.message; }
       }
+    }
+    if (!finished) {
+      // 서버의 끝 신호(done)가 오지 않았다: 시간 제한이나 네트워크 문제로 응답이 중간에 끊긴 것
+      bubble.textContent = reply || "(답을 받지 못했어요)";
+      busyNote?.remove();
+      note(under, "busy", "⚠ 응답이 끝까지 오지 않았어요. 답이 잘렸거나 기억이 저장되지 않았을 수 있어요.");
     }
     if (!tReply) tReply = performance.now();
     panel?.timing({turn: tTurn && tTurn - t0, first: tFirst && tFirst - t0, reply: tReply - t0, total: performance.now() - t0});
