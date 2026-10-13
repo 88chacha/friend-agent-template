@@ -12,5 +12,9 @@
 | `dockerignore` | `.dockerignore` | 이미지에 넣지 않을 파일(.env 포함) |
 | `incidents/rename-key.patch` | `git apply` | 키 환경변수 이름을 바꿔 서버에서 앱이 시작하지 않는 변경 |
 | `incidents/reminder-timezone.patch` | `git apply` | 약속 시각에서 시간대를 빼는 변경. 노트북(한국 시간)에서는 멀쩡하고 서버(UTC)에서는 9시간 늦게 저장됨 |
+| `incidents/port-hardcode.patch` | `git apply` | 시작 명령의 포트를 8000 으로 고정. 노트북에서는 실행되지만 Cloud Run이 정한 포트에서 기다리지 않아 배포가 실패함 |
+| `incidents/missing-package.patch` | `git apply` | requirements.txt 에서 `python-multipart` 를 뺌. 앱이 시작하면서 오류를 내고 꺼짐 |
+
+어느 실습부터 시작하든 필요한 상태와 만드는 방법은 `docs/start-states.md` 에 있다.
 
 워크플로가 읽는 값(`GCP_PROJECT_ID`, `WIF_PROVIDER`, `DEPLOY_SA`, `RUNTIME_SA` 등)은 `docs/wif-setup.md` 절차로 만든다. 액션 버전은 바꾸지 않는다.

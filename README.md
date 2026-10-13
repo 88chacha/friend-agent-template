@@ -57,7 +57,7 @@ cd <저장소 이름>
 | `Procfile` | Cloud Run이 앱을 시작할 때 쓰는 명령 |
 | `AGENTS.md`, `CLAUDE.md` | 코딩 에이전트와 사람이 지키는 작업 규칙 |
 | `.claude/settings.json` | 코딩 에이전트(Claude Code)가 실행하지 못하는 명령과 매번 묻는 명령 |
-| `docs/` | 배포 기록 양식, Supabase 연결 절차, GitHub Actions 배포 권한 절차(`wif-setup.md`), 운영 절차(`runbook.md`)와 카나리 판단 기준(`canary-criteria.md`) 양식 |
+| `docs/` | 동작 예시(`examples.md`), 실습별 시작 상태(`start-states.md`), 배포 기록 양식, Supabase 연결 절차, GitHub Actions 배포 권한 절차(`wif-setup.md`), 운영 절차(`runbook.md`)와 카나리 판단 기준(`canary-criteria.md`) 양식 |
 | `starter/` | 실습 단계마다 꺼내 쓰는 워크플로, Dockerfile 예시, 일부러 넣어 보는 변경(`starter/README.md`) |
 | `data/samples/` | 사진 글자 읽기 실습용 일정표 사진 |
 | `JOURNEY.md` | 작업 일지 양식 |
