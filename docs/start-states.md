@@ -19,7 +19,7 @@
 | 무중단 배포 | Actions에서 이미지를 만들어 배포하는 `deploy.yml`, Artifact Registry 저장소 `friend-agent` 와 쓰기 권한, 저장소 변수 `AR_REPO` | 아래 G | 15분 |
 | 카나리와 메인 퀘스트 | `deploy.yml` 의 배포 단계에 `/health` 시작 확인 설정 | 아래 H | 5분 |
 
-Supabase(데이터베이스와 로그인)는 "자동 검사와 환경 분리" 실습 안에서 붙인다. 그 뒤 실습은 Supabase 없이도 진행할 수 있다(서버 메모리 저장).
+Supabase(데이터베이스와 로그인)는 "공개 준비" 실습에서 구글 로그인과 함께 붙인다. 그 전 실습은 모두 Supabase 없이 진행한다(서버 메모리 저장). 붙이는 절차는 `docs/supabase.md`.
 
 ## A. Google Cloud와 저장소
 

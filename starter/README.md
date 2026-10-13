@@ -14,6 +14,12 @@
 | `incidents/reminder-timezone.patch` | `git apply` | 약속 시각에서 시간대를 빼는 변경. 노트북(한국 시간)에서는 멀쩡하고 서버(UTC)에서는 9시간 늦게 저장됨 |
 | `incidents/port-hardcode.patch` | `git apply` | 시작 명령의 포트를 8000 으로 고정. 노트북에서는 실행되지만 Cloud Run이 정한 포트에서 기다리지 않아 배포가 실패함 |
 | `incidents/missing-package.patch` | `git apply` | requirements.txt 에서 `python-multipart` 를 뺌. 앱이 시작하면서 오류를 내고 꺼짐 |
+| `incidents/safety-exact-match.patch` | `git apply` | 위기 표현을 목록과 정확히 같은 문장일 때만 잡게 바꿈. 테스트 `test_crisis_message_gets_fixed_safety_reply` 가 실패함 |
+| `incidents/weather-keyword.patch` | `git apply` | 날씨 키워드를 "날씨 알려"로 좁힘. 테스트 `test_weather_question_picks_weather_tool` 이 실패함 |
+| `incidents/dockerfiles/no-tesseract/` | 루트 `Dockerfile` 로 복사 | tesseract 설치 줄이 빠진 Dockerfile. 사진 글자 읽기가 서버에서 실패함 |
+| `incidents/dockerfiles/env-included/` | `dockerignore` 를 루트 `.dockerignore` 로 복사 | `.env` 가 빠진 .dockerignore. 노트북에서 빌드한 이미지 안에 키 파일이 들어감 |
+| `incidents/dockerfiles/root-user/` | 루트 `Dockerfile` 로 복사 | 관리자(root)로 실행되는 Dockerfile |
+| `incidents/dockerfiles/port-fixed/` | 루트 `Dockerfile` 로 복사 | 포트를 8000 으로 고정한 Dockerfile. Cloud Run에서 시작 확인에 실패함 |
 
 어느 실습부터 시작하든 필요한 상태와 만드는 방법은 `docs/start-states.md` 에 있다.
 

@@ -152,7 +152,7 @@ gcloud run deploy friend-agent --source . --region us-central1 --allow-unauthent
 
 | 기능 | 켜는 방법 | 필요한 것 |
 | --- | --- | --- |
-| 재배포해도 남는 저장, 사용자별 데이터 | `STORAGE=supabase`, `AUTH=supabase` | Supabase 프로젝트, 익명 로그인 켜기. 절차는 `docs/supabase.md` |
+| 재배포해도 남는 저장, 사용자별 데이터 | `STORAGE=supabase`, `AUTH=supabase` | Supabase 프로젝트, 익명 로그인 켜기. 절차는 `docs/supabase.md`. 동료에게 공개하기 전에 구글 로그인과 함께 붙인다 |
 | 구글 계정 연결 | `GOOGLE_LOGIN=true` | Supabase 구글 로그인 설정, 수동 연결(manual linking) 켜기 |
 | 사진 글자 읽기 | `OCR_ENABLED=true` | tesseract 프로그램. 노트북: `brew install tesseract tesseract-lang`(macOS). 서버: Dockerfile에 설치(`starter/Dockerfile`) |
 | 앱을 닫아 둬도 오는 약속 알림 | 아직 없음 | Cloud Scheduler, 웹 푸시, PWA |
