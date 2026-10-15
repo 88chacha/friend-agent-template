@@ -1,6 +1,6 @@
 # 에이전트 서비스 실행 환경. 이 파일을 저장소 루트로 복사해 쓴다(Dockerfile).
 # 1) 시작 이미지와 Python 버전을 고정한다.
-FROM python:3.12-slim-bookworm
+FROM python:3.13-slim-bookworm
 
 # 2) 운영체제 프로그램 설치: 사진 글자 읽기에 쓰는 tesseract 와 한국어 데이터
 RUN apt-get update \
