@@ -110,3 +110,29 @@ flags: --service-account=${{ vars.RUNTIME_SA }} --startup-probe=httpGet.path=/he
 ```
 
 PR로 올려 배포한 뒤, 콘솔의 리비전 상세에서 시작 확인이 `/health` 로 설정되었는지 본다.
+
+## 템플릿이 바뀌었을 때
+
+템플릿으로 만든 저장소는 만든 순간의 파일만 복사한 새 저장소라서, 템플릿이 바뀌어도 내 저장소에는 반영되지 않습니다. 강사가 템플릿의 특정 파일을 고쳤다고 안내하면, 그 파일만 템플릿에서 가져와 덮어씁니다. 아래 명령의 파일 이름은 안내받은 파일로 바꿉니다.
+
+```text
+# 내 저장소 폴더에서. remote 추가는 처음 한 번만 한다
+git remote add template https://github.com/88chacha/friend-agent-template.git
+
+# 템플릿의 최신 내용을 받고, 안내받은 파일만 가져온다
+git fetch template
+git checkout template/main -- <파일 경로> <파일 경로>
+
+git status          # 가져온 파일만 바뀌었는지 확인한다
+git commit -m "템플릿 수정 반영"
+git push
+```
+
+코딩 에이전트에게 맡길 때:
+
+```text
+88chacha/friend-agent-template 저장소를 template 이라는 이름의 remote로 추가하고(이미 있으면 건너뛰고) fetch 해 줘.
+template/main 에서 <파일 경로> 파일만 가져와서 커밋해 줘. 다른 파일은 건드리지 마.
+```
+
+가져온 파일을 내가 이미 고쳐 두었다면 내 변경은 템플릿의 내용으로 덮어써집니다. 실행하기 전에 `git diff template/main -- <파일 경로>` 로 무엇이 바뀌는지 먼저 봅니다. 템플릿 전체를 합치는 `git merge template/main --allow-unrelated-histories` 는 내가 고친 파일마다 충돌이 나기 쉬워 쓰지 않습니다.
