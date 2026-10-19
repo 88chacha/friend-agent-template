@@ -66,7 +66,7 @@ cd <저장소 이름>
 
 | 이름 | 값 | 설명 |
 | --- | --- | --- |
-| `LLM_PROVIDER` | `openai`, `gemini`, `fake` | 기본값 `openai`. `fake` 는 키 없이 가짜 응답을 돌려준다 |
+| `LLM_PROVIDER` | `openai`, `gemini`, `claude`, `fake` | 기본값 `openai`. `fake` 는 키 없이 가짜 응답을 돌려준다. `claude` 의 기본 모델은 `claude-opus-5-5` 이고, `LLM_MODEL=claude-haiku-5-5` 처럼 바꿀 수 있다 |
 | `LLM_API_KEY` | AI 회사 API 키 | `fake` 가 아니면 필수. 없으면 앱이 시작하지 않는다 |
 | `LLM_MODEL` | 모델 이름 | 비우면 제공자별 기본값(`gpt-4o-mini` 등)을 쓴다 |
 | `ENV` | `local`, `staging`, `production` | `staging` 이면 화면 위에 테스트 환경 표시. `production` 이면 개발용 패널이 기본으로 꺼짐 |
