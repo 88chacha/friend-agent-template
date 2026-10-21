@@ -15,6 +15,7 @@ GitHub Actions가 서비스 계정 키 파일 없이 Google Cloud에 배포하�
 | 배포용 서비스 계정 | `github-deployer` | 소스 배포 `roles/run.sourceDeveloper` | 프로젝트 |
 | | | API 사용 `roles/serviceusage.serviceUsageConsumer` | 프로젝트 |
 | | | 서비스 계정 사용 `roles/iam.serviceAccountUser` | 실행용 서비스 계정 하나 |
+| | | 빌드 계정 사용 `roles/iam.serviceAccountUser` | Compute Engine 기본 서비스 계정 하나 (소스 배포의 빌드가 이 계정으로 실행된다) |
 | | | (이미지 배포 때 추가) 이미지 올리기 `roles/artifactregistry.writer` | Artifact Registry 저장소 `friend-agent` 하나 |
 | Workload Identity 풀 | `github` | | |
 | 풀의 공급자 | `friend-agent-repo` | 내 저장소에서 온 요청만 받는 조건 | |
@@ -60,9 +61,14 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 gcloud iam service-accounts add-iam-policy-binding \
   friend-agent-runtime@$PROJECT_ID.iam.gserviceaccount.com --project $PROJECT_ID \
   --member "serviceAccount:$DEPLOYER" --role roles/iam.serviceAccountUser
+
+# 소스 배포는 Cloud Build가 Compute Engine 기본 서비스 계정으로 빌드한다. 배포용 계정이 그 계정으로 빌드를 실행할 수 있게 한다.
+gcloud iam service-accounts add-iam-policy-binding \
+  $PROJECT_NUMBER-compute@developer.gserviceaccount.com --project $PROJECT_ID \
+  --member "serviceAccount:$DEPLOYER" --role roles/iam.serviceAccountUser
 ```
 
-`roles/iam.serviceAccountUser` 는 프로젝트 전체가 아니라 실행용 서비스 계정 하나에만 준다. 프로젝트 전체에 주면 배포용 계정이 프로젝트의 모든 서비스 계정으로 행동할 수 있다.
+`roles/iam.serviceAccountUser` 는 프로젝트 전체가 아니라 실행용 서비스 계정과 빌드에 쓰는 기본 서비스 계정, 이 두 계정에만 준다. 프로젝트 전체에 주면 배포용 계정이 프로젝트의 모든 서비스 계정으로 행동할 수 있다. 빌드 계정 권한이 없으면 배포 단계가 `Your account does not have permission to check details of build service account` 경고 뒤에 실패한다.
 
 ## 3. Workload Identity 풀과 공급자
 
