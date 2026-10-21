@@ -142,7 +142,7 @@ gh variable set BUILD_SA --body "friend-agent-builder@$PROJECT_ID.iam.gserviceac
 
 ## 8. 확인
 
-- Google Cloud 콘솔 > IAM 및 관리자 > 워크로드 아이덴티티 제휴: 풀 `github` 과 공급자 `friend-agent-repo` 가 보이고, 공급자의 속성 조건에 내 저장소 이름이 있다.
+- Google Cloud 콘솔 > IAM 및 관리자 > 워크로드 아이덴티티 제휴: 목록에는 표시 이름이 나온다. 풀 `GitHub Actions` 안에 공급자 `friend-agent 저장소` 가 보이고, 공급자의 수정(연필) 화면에서 속성 조건에 내 저장소 이름이 있다. 명령으로는 `gcloud iam workload-identity-pools providers describe friend-agent-repo --project $PROJECT_ID --location global --workload-identity-pool github --format "value(attributeCondition)"`.
 - IAM 및 관리자 > 서비스 계정: `github-deployer`, `friend-agent-runtime`, `friend-agent-builder` 가 있고 키 탭에 키가 하나도 없다.
 - 배포 후 Cloud Build > 기록: 최근 빌드의 서비스 계정이 `friend-agent-builder` 다.
 - IAM 및 관리자 > IAM: `github-deployer` 의 역할이 위 표와 같다. Owner, Editor 가 없다.
