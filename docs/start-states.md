@@ -18,8 +18,9 @@
 | 이미지 배포 | 저장소 루트의 `Dockerfile`, `.dockerignore` | 아래 F | 5분 |
 | 무중단 배포 | Actions에서 이미지를 만들어 배포하는 `deploy.yml`, Artifact Registry 저장소 `friend-agent` 와 쓰기 권한, 저장소 변수 `AR_REPO` | 아래 G | 15분 |
 | 카나리와 메인 퀘스트 | `deploy.yml` 의 배포 단계에 `/health` 시작 확인 설정 | 아래 H | 5분 |
+| | staging·production 서비스가 Supabase(데이터베이스와 익명 로그인)에 연결됨 | 아래 I | 40분 |
 
-Supabase(데이터베이스와 로그인)는 "공개 준비" 실습에서 구글 로그인과 함께 붙인다. 그 전 실습은 모두 Supabase 없이 진행한다(서버 메모리 저장). 붙이는 절차는 `docs/supabase.md`.
+Supabase(데이터베이스와 익명 로그인)는 "무중단 배포" 실습 안에서 붙인다. 그 전 실습은 모두 Supabase 없이 진행한다(서버 메모리 저장). 구글 로그인은 "공개 준비" 실습에서 더한다. 붙이는 절차는 `docs/supabase.md`.
 
 ## A. Google Cloud와 저장소
 
@@ -110,6 +111,10 @@ flags: --service-account=${{ vars.RUNTIME_SA }} --build-service-account=projects
 ```
 
 PR로 올려 배포한 뒤, 콘솔의 리비전 상세에서 시작 확인이 `/health` 로 설정되었는지 본다.
+
+## I. Supabase 연결
+
+`docs/supabase.md` 의 1~3단계를 staging 과 production 에 한 번씩 진행한다. secret key 는 Secret Manager의 `supabase-secret-staging`, `supabase-secret-production` 에 넣고, 실행용 서비스 계정에 두 비밀값 각각의 읽기 권한을 준다. 확인: 화면 왼쪽 아래에 "게스트로 사용 중"이 보이고, 새 리비전을 배포한 뒤에도 대화가 남는다.
 
 ## 템플릿이 바뀌었을 때
 
