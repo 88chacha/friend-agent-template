@@ -8,7 +8,6 @@
 | `workflows/ci.yml` | `.github/workflows/ci.yml` | PR마다 테스트(가짜 응답, 비용 없음). 배포 전에도 불러 씀 |
 | `workflows/deploy-envs.yml` | `.github/workflows/deploy.yml` (기존 파일 대체) | 테스트 통과 후 staging 브랜치는 staging 에, main 은 승인 후 production 에 배포 |
 | `workflows/deploy-image.yml` | `.github/workflows/deploy.yml` (기존 파일 대체) | Actions에서 Dockerfile로 이미지를 만들어 커밋 번호 태그로 올리고 그 이미지로 배포 |
-| `workflows/deploy-promote.yml` | `.github/workflows/deploy.yml` (기존 파일 대체) | staging 브랜치에서만 이미지를 만들고, main 에서는 staging 에서 확인한 이미지를 다이제스트 그대로 production 에 승격 |
 | `Dockerfile` | `Dockerfile` | 실행 환경 예시(Python 3.13, tesseract 와 한국어 데이터, 관리자 아닌 사용자) |
 | `dockerignore` | `.dockerignore` | 이미지에 넣지 않을 파일(.env 포함) |
 | `incidents/rename-key.patch` | `git apply` | 키 환경변수 이름을 바꿔 서버에서 앱이 시작하지 않는 변경 |

@@ -97,10 +97,10 @@ PR로 올려 staging, production 에 배포한다. 소스 배포는 저장소에
 
 ```text
 gh variable set AR_REPO --body "us-central1-docker.pkg.dev/$PROJECT_ID/friend-agent"
-cp starter/workflows/deploy-promote.yml .github/workflows/deploy.yml
+cp starter/workflows/deploy-image.yml .github/workflows/deploy.yml
 ```
 
-PR로 올려 staging 에 배포한 뒤, staging 에서 main 으로 PR을 올려 production 에 승격한다. `deploy-promote.yml` 은 staging 에서만 이미지를 만들고, production 에는 staging 에서 확인한 이미지를 그대로 배포한다.
+PR로 올려 staging, production 에 배포한다.
 
 ## H. 시작 확인 설정
 
