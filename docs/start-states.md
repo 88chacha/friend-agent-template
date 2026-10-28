@@ -16,11 +16,13 @@
 | | GitHub 환경 `staging`·`production`(변수 SERVICE, ENV. production 은 배포 승인자 지정), `staging` 브랜치 | 아래 D | 15분 |
 | | `friend-agent-staging` 서비스 (공개, 비밀값 연결) | 아래 E | 10분 |
 | 이미지 배포 | 저장소 루트의 `Dockerfile`, `.dockerignore` | 아래 F | 5분 |
-| 무중단 배포 | Actions에서 이미지를 만들어 배포하는 `deploy.yml`, Artifact Registry 저장소 `friend-agent` 와 쓰기 권한, 저장소 변수 `AR_REPO` | 아래 G | 15분 |
-| 카나리와 메인 퀘스트 | `deploy.yml` 의 배포 단계에 `/health` 시작 확인 설정 | 아래 H | 5분 |
+| 무중단 배포 | 저장소 루트의 `Dockerfile` 로 만든 이미지 `friend-agent:local`. 내 컴퓨터의 Docker로만 진행하므로 Google Cloud 쪽 상태는 없어도 된다 | 저장소 루트에서 `docker build -t friend-agent:local .` | 5분 |
+| 카나리와 메인 퀘스트 | Actions에서 이미지를 만들어 배포하는 `deploy.yml`, Artifact Registry 저장소 `friend-agent` 와 쓰기 권한, 저장소 변수 `AR_REPO` | 아래 G | 15분 |
+| | Supabase 시험용 프로젝트(테이블, 익명 로그인) | `docs/supabase.md` 1단계 | 15분 |
+| 그 뒤의 실습 | `deploy.yml` 의 배포 단계에 `/health` 시작 확인 설정 | 아래 H | 5분 |
 | | staging·production 서비스가 Supabase(데이터베이스와 익명 로그인)에 연결됨 | 아래 I | 40분 |
 
-Supabase(데이터베이스와 익명 로그인)는 "무중단 배포" 실습 안에서 붙인다. 그 전 실습은 모두 Supabase 없이 진행한다(서버 메모리 저장). 구글 로그인은 "공개 준비" 실습에서 더한다. 붙이는 절차는 `docs/supabase.md`.
+Supabase(데이터베이스와 익명 로그인)는 "무중단 배포" 실습에서 시험용 프로젝트를 만들어 내 컴퓨터의 컨테이너에 붙이고, "카나리와 메인 퀘스트" 실습에서 staging·production 서비스에 연결한다. 시작 확인 설정(H)도 "카나리와 메인 퀘스트" 실습 안에서 한다. 그 전 실습은 모두 Supabase 없이 진행한다(서버 메모리 저장). 구글 로그인은 "공개 준비" 실습에서 더한다. 붙이는 절차는 `docs/supabase.md`.
 
 ## A. Google Cloud와 저장소
 
@@ -107,7 +109,7 @@ PR로 올려 staging, production 에 배포한다.
 `.github/workflows/deploy.yml` 의 배포 단계 `flags` 줄을 아래처럼 바꾼다. 앱이 `/health` 에 정상 응답해야 요청을 받기 시작한다.
 
 ```text
-flags: --service-account=${{ vars.RUNTIME_SA }} --build-service-account=projects/${{ vars.GCP_PROJECT_ID }}/serviceAccounts/${{ vars.BUILD_SA }} --startup-probe=httpGet.path=/health,periodSeconds=5,failureThreshold=12,timeoutSeconds=2
+flags: --service-account=${{ vars.RUNTIME_SA }} --startup-probe=httpGet.path=/health,periodSeconds=5,failureThreshold=12,timeoutSeconds=2
 ```
 
 PR로 올려 배포한 뒤, 콘솔의 리비전 상세에서 시작 확인이 `/health` 로 설정되었는지 본다.
